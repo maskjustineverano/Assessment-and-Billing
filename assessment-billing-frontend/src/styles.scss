@@ -1,0 +1,42 @@
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --surface-strong: #ffffff;
+  --line: #dde4ee;
+  --line-soft: #edf2f7;
+  --text: #1f2937;
+  --muted: #667085;
+  --muted-strong: #475467;
+  --primary: #275ea3;
+  --primary-soft: #eaf2fd;
+  --accent: #8a5a2b;
+  --accent-soft: #f9efe4;
+  --success-soft: #edf8f2;
+  --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "Trebuchet MS", "Gill Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}

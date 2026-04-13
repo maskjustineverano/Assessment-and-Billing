@@ -1,0 +1,128 @@
+.dashboard-page {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.dashboard-hero,
+.metric-card,
+.module-group {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.dashboard-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.8fr);
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.dashboard-hero h1,
+.module-group h2 {
+  margin: 0;
+  color: var(--text);
+}
+
+.dashboard-hero p {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.eyebrow {
+  display: inline-flex;
+  margin-bottom: 0.65rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status-panel {
+  padding: 1rem;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+}
+
+.status-panel span,
+.metric-card span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.status-panel strong,
+.metric-card strong {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 1.45rem;
+  color: var(--text);
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  padding: 1rem;
+}
+
+.metric-card p {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.loading-card {
+  opacity: 0.7;
+}
+
+.module-board {
+  display: grid;
+  gap: 1rem;
+}
+
+.module-group {
+  padding: 1rem;
+}
+
+.module-group h2 {
+  margin-bottom: 0.9rem;
+  font-size: 1.15rem;
+}
+
+.module-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.module-chip {
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.module-chip:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+@media (max-width: 900px) {
+  .dashboard-hero,
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+}

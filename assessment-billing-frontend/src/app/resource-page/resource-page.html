@@ -1,0 +1,102 @@
+<section class="resource-page" *ngIf="config">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">{{ endpointLabel() }}</span>
+      <h1>{{ config.title }}</h1>
+      <p>{{ config.description }}</p>
+    </div>
+    <button type="button" class="secondary-button" (click)="loadItems()">Refresh</button>
+  </div>
+
+  <div class="resource-grid">
+    <article class="editor-card">
+      <div class="card-heading">
+        <h2>{{ editingId === null ? 'Create Record' : 'Update Record' }}</h2>
+        <button type="button" class="ghost-button" (click)="resetForm()" *ngIf="editingId !== null">Cancel Edit</button>
+      </div>
+
+      <div class="field-grid">
+        <label class="field" *ngFor="let field of config.fields">
+          <span>{{ field.label }}</span>
+
+          <textarea
+            *ngIf="field.type === 'textarea'"
+            [ngModel]="valueFor(field)"
+            [name]="field.key"
+            (ngModelChange)="updateValue(field.key, $event)"
+            [placeholder]="field.placeholder || ''"
+            rows="4"
+          ></textarea>
+
+          <select
+            *ngIf="field.type === 'select'"
+            [ngModel]="valueFor(field)"
+            [name]="field.key"
+            (ngModelChange)="updateValue(field.key, $event)"
+          >
+            <option value="">Select an option</option>
+            <option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</option>
+          </select>
+
+          <input
+            *ngIf="field.type !== 'textarea' && field.type !== 'select'"
+            [type]="field.type"
+            [ngModel]="valueFor(field)"
+            [name]="field.key"
+            (ngModelChange)="updateValue(field.key, $event)"
+            [placeholder]="field.placeholder || ''"
+          />
+        </label>
+      </div>
+
+      <div class="button-row">
+        <button type="button" class="primary-button" (click)="save()" [disabled]="saving">
+          {{ saving ? 'Saving...' : editingId === null ? 'Create' : 'Update' }}
+        </button>
+      </div>
+
+      <p class="message success" *ngIf="message">{{ message }}</p>
+      <p class="message error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </article>
+
+    <article class="records-card">
+      <div class="card-heading">
+        <h2>Records</h2>
+        <span>{{ items.length }} loaded</span>
+      </div>
+
+      <div class="record-list" *ngIf="!loading && items.length > 0; else recordState">
+        <article class="record-item" *ngFor="let item of items">
+          <div class="record-copy" (click)="inspect(item)">
+            <strong>{{ displayValue(item['name'] || item['title'] || item['student_id'] || item['code'] || item['id']) }}</strong>
+            <p *ngFor="let key of fieldsFor(item)">
+              <span>{{ key }}</span>
+              <strong>{{ displayValue(item[key]) }}</strong>
+            </p>
+          </div>
+          <div class="record-actions">
+            <button type="button" class="secondary-button" (click)="edit(item)">Edit</button>
+            <button type="button" class="ghost-button danger" (click)="remove(item)">Delete</button>
+          </div>
+        </article>
+      </div>
+
+      <ng-template #recordState>
+        <p class="empty-state">{{ loading ? 'Loading records...' : 'No records returned yet.' }}</p>
+      </ng-template>
+    </article>
+  </div>
+
+  <article class="details-card" *ngIf="selectedItem">
+    <div class="card-heading">
+      <h2>Record Details</h2>
+    </div>
+
+    <div class="detail-grid">
+      <article *ngFor="let entry of detailEntries()">
+        <span>{{ entry.key }}</span>
+        <strong>{{ entry.value }}</strong>
+      </article>
+    </div>
+  </article>
+</section>

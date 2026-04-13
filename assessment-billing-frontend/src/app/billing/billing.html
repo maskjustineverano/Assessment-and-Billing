@@ -1,0 +1,152 @@
+<div class="billing-workflow">
+  <section class="page-banner">
+    <div>
+      <span class="eyebrow">Billing</span>
+      <h1>Billing &amp; Payment</h1>
+      <p>Create billing records, record payments, and check the remaining balance for each student.</p>
+    </div>
+    <div class="banner-totals">
+      <span>Payments tracked</span>
+      <strong>{{ workflow.paymentsReceived | currency:'PHP':'symbol':'1.2-2' }}</strong>
+    </div>
+  </section>
+
+  <div class="billing-grid">
+    <section class="invoice-panel">
+      <h2>Billing details</h2>
+      <form [formGroup]="billingForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <label class="field">
+            <span>Student</span>
+            <select formControlName="studentId" (change)="onStudentChange($any($event.target).value)">
+              <option value="">Select a student</option>
+              <option *ngFor="let student of students" [value]="student.studentId">
+                {{ student.studentId }} - {{ student.name || (student.firstName + ' ' + student.lastName) }}
+              </option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Invoice Number</span>
+            <input type="text" [value]="currentInvoiceNumber" readonly />
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label class="field">
+            <span>Description</span>
+            <input type="text" formControlName="description" />
+          </label>
+          <label class="field">
+            <span>Total Fees</span>
+            <input type="number" formControlName="totalFees" min="0" readonly />
+            <small class="field-note">{{ totalFeesMessage }}</small>
+          </label>
+        </div>
+
+        <h2>Payment options</h2>
+        <div class="form-row">
+          <label class="field">
+            <span>Payment Method</span>
+            <select formControlName="paymentMethod">
+              <option value="Credit Card">Credit Card</option>
+              <option value="Online Payment">Online Payment</option>
+              <option value="Bank Payment">Bank Payment</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Amount Paid</span>
+            <input type="number" formControlName="amountPaid" min="0" />
+          </label>
+        </div>
+
+        <div class="form-row" *ngIf="paymentProviderOptions.length > 0">
+          <label class="field">
+            <span>{{ paymentProviderLabel }}</span>
+            <select formControlName="paymentProvider">
+              <option value="">Select payment option</option>
+              <option *ngFor="let option of paymentProviderOptions" [value]="option">{{ option }}</option>
+            </select>
+          </label>
+        </div>
+
+        <h2>Payment plan</h2>
+        <div class="form-row">
+          <label class="field">
+            <span>Plan Type</span>
+            <select formControlName="paymentPlan">
+              <option value="Full Payment">Full Payment</option>
+              <option value="Two Installments">Two Installments</option>
+              <option value="Monthly Installments">Monthly Installments</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Statement / Report Window</span>
+            <select formControlName="statementMonth">
+              <option value="Current Term">Current Term</option>
+              <option value="Quarterly">Quarterly</option>
+              <option value="Yearly">Yearly</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="invoice-summary">
+          <article>
+            <span>Total Fees</span>
+            <strong>{{ invoicePreview.totalFees | currency:'PHP':'symbol':'1.2-2' }}</strong>
+          </article>
+          <article>
+            <span>Payments Received</span>
+            <strong>{{ invoicePreview.priorPayments | currency:'PHP':'symbol':'1.2-2' }}</strong>
+          </article>
+          <article>
+            <span>Current Payment</span>
+            <strong>{{ invoicePreview.amountPaid | currency:'PHP':'symbol':'1.2-2' }}</strong>
+          </article>
+          <article class="highlight">
+            <span>Balance Due</span>
+            <strong>{{ invoicePreview.balanceDue | currency:'PHP':'symbol':'1.2-2' }}</strong>
+          </article>
+        </div>
+
+        <button type="submit" class="primary-button" [disabled]="billingForm.invalid || loading">
+          {{ loading ? 'Posting Payment...' : 'Save Invoice / Payment' }}
+        </button>
+      </form>
+    </section>
+
+    <aside class="reports-panel">
+      <h2>Receipts &amp; Reports</h2>
+      <div class="report-cards">
+        <article>
+          <span>Invoices Recorded</span>
+          <strong>{{ billings.length }}</strong>
+        </article>
+        <article>
+          <span>Total Fees</span>
+          <strong>{{ workflow.totalFees | currency:'PHP':'symbol':'1.2-2' }}</strong>
+        </article>
+        <article>
+          <span>Outstanding</span>
+          <strong>{{ workflow.balanceDue | currency:'PHP':'symbol':'1.2-2' }}</strong>
+        </article>
+      </div>
+
+      <div class="billing-list" *ngIf="billings.length > 0; else noBillings">
+        <article class="billing-item" *ngFor="let billing of billings">
+          <div class="record-top">
+            <strong>{{ billing.invoiceNumber || 'Invoice' }}</strong>
+            <span>{{ billing.paymentChannel || billing.paymentMethod }}</span>
+          </div>
+          <p><strong>Student ID:</strong> {{ billing.studentId }}</p>
+          <p><strong>Plan:</strong> {{ billing.paymentPlan }}</p>
+          <p><strong>Paid:</strong> {{ (billing.amountPaid || billing.amount || 0) | currency:'PHP':'symbol':'1.2-2' }}</p>
+          <p><strong>Balance:</strong> {{ (billing.balanceDue || 0) | currency:'PHP':'symbol':'1.2-2' }}</p>
+        </article>
+      </div>
+
+      <ng-template #noBillings>
+        <p class="empty-state">No billing records yet.</p>
+      </ng-template>
+    </aside>
+  </div>
+</div>

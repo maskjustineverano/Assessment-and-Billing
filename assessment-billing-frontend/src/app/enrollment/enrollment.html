@@ -1,0 +1,130 @@
+<div class="workflow-page">
+  <section class="page-header">
+    <div>
+      <span class="eyebrow">Enrollment</span>
+      <h1>Student enrollment</h1>
+      <p>Add student details, choose classes, and review fees before assessment.</p>
+    </div>
+    <div class="header-status">
+      <span>{{ enrollments.length }} students in queue</span>
+    </div>
+  </section>
+
+  <div class="content-grid">
+    <section class="form-card">
+      <form [formGroup]="enrollmentForm" (ngSubmit)="onSubmit()">
+        <div class="section-block">
+          <h2>Student information</h2>
+          <div class="form-row">
+            <label class="field">
+              <span>Student ID</span>
+              <input type="text" formControlName="studentId" placeholder="STU-2026-001" />
+            </label>
+            <label class="field">
+              <span>Email Address</span>
+              <input type="email" formControlName="email" placeholder="student@email.com" />
+            </label>
+          </div>
+          <div class="form-row">
+            <label class="field">
+              <span>First Name</span>
+              <input type="text" formControlName="firstName" placeholder="First name" />
+            </label>
+            <label class="field">
+              <span>Last Name</span>
+              <input type="text" formControlName="lastName" placeholder="Last name" />
+            </label>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <h2>Course selection</h2>
+          <div class="form-row">
+            <label class="field">
+              <span>Program</span>
+              <select formControlName="program">
+                <option value="">Select a program</option>
+                <option *ngFor="let program of programs" [value]="program.value">{{ program.label }}</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Academic Level</span>
+              <select formControlName="academicLevel">
+                <option value="Freshman">Freshman</option>
+                <option value="Sophomore">Sophomore</option>
+                <option value="Junior">Junior</option>
+                <option value="Senior">Senior</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="class-grid">
+            <label class="class-option" *ngFor="let option of classOptions">
+              <input
+                type="checkbox"
+                [checked]="isClassSelected(option.value)"
+                (change)="toggleClassSelection(option.value, $any($event.target).checked)"
+              />
+              <div>
+                <strong>{{ option.label }}</strong>
+                <span>{{ option.fee | currency:'PHP':'symbol':'1.0-0' }}</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <h2>Fee summary</h2>
+          <p class="helper-copy">{{ feeSetupMessage }}</p>
+          <div class="form-row fee-row">
+            <label class="field">
+              <span>Scholarship / Discount (%)</span>
+              <input type="number" formControlName="discountPercent" min="0" max="100" />
+            </label>
+          </div>
+
+          <div class="fee-summary">
+            <article>
+              <span>Tuition</span>
+              <strong>{{ feePreview.tuition | currency:'PHP':'symbol':'1.2-2' }}</strong>
+            </article>
+            <article>
+              <span>Class Fees</span>
+              <strong>{{ feePreview.fees | currency:'PHP':'symbol':'1.2-2' }}</strong>
+            </article>
+            <article>
+              <span>Discount</span>
+              <strong>-{{ feePreview.discount | currency:'PHP':'symbol':'1.2-2' }}</strong>
+            </article>
+            <article class="highlight">
+              <span>Total Fees</span>
+              <strong>{{ feePreview.total | currency:'PHP':'symbol':'1.2-2' }}</strong>
+            </article>
+          </div>
+        </div>
+
+        <button type="submit" class="primary-button" [disabled]="enrollmentForm.invalid || loading">
+          {{ loading ? 'Saving Enrollment...' : 'Save Enrollment For Assessment' }}
+        </button>
+      </form>
+    </section>
+
+    <aside class="side-card">
+      <h2>Enrollment Queue</h2>
+      <div class="record-list" *ngIf="enrollments.length > 0; else noEnrollments">
+        <article class="record-item" *ngFor="let enrollment of enrollments">
+          <div class="record-top">
+            <strong>{{ enrollment.name || (enrollment.firstName + ' ' + enrollment.lastName) }}</strong>
+            <span>{{ enrollment.status || 'Pending Assessment' }}</span>
+          </div>
+          <p><strong>Student ID:</strong> {{ enrollment.studentId }}</p>
+          <p><strong>Program:</strong> {{ enrollment.course || enrollment.program }}</p>
+          <p><strong>Total Fees:</strong> {{ (enrollment.totalFees || 0) | currency:'PHP':'symbol':'1.2-2' }}</p>
+        </article>
+      </div>
+      <ng-template #noEnrollments>
+        <p class="empty-state">No students enrolled yet.</p>
+      </ng-template>
+    </aside>
+  </div>
+</div>

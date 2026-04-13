@@ -1,0 +1,44 @@
+<ng-container *ngIf="isAuthLayout(); else appWorkspace">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<ng-template #appWorkspace>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand-block">
+        <div class="brand-mark">
+          <span class="brand-icon">A</span>
+          <div>
+            <strong>Academic Atelier</strong>
+            <span>{{ roleLabel() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a
+          *ngFor="let item of sidebarItems()"
+          class="sidebar-link"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: !!item.exact }"
+        >
+          <span class="sidebar-link-icon">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span>API Endpoint</span>
+        <strong>{{ authStore.baseUrl() }}</strong>
+        <p *ngIf="authStore.user()">Signed in as {{ authStore.user()?.['name'] || authStore.user()?.['email'] }}</p>
+      </div>
+    </aside>
+
+    <main class="workspace-stage">
+      <section class="router-stage">
+        <router-outlet></router-outlet>
+      </section>
+    </main>
+  </div>
+</ng-template>

@@ -1,0 +1,156 @@
+<section class="assessment-page">
+  <div class="page-header">
+    <div>
+      <span class="eyebrow">Assessment</span>
+      <h1>Assessment and scholarship</h1>
+      <p>Select a student, save the assessment, apply scholarship details, and review the result.</p>
+    </div>
+  </div>
+
+  <div class="assessment-grid">
+    <article class="selection-card">
+      <h2>Select student</h2>
+      <label class="field">
+        <span>Enrollment Record</span>
+        <select [ngModel]="selectedStudentId" name="selectedStudentId" (ngModelChange)="onStudentChange($event)">
+          <option value="">Choose a student</option>
+          <option *ngFor="let student of students" [value]="displayValue(student['student_id'] || student['studentId'])">
+            {{ displayValue(student['student_id'] || student['studentId']) }} -
+            {{ displayValue(student['name'] || student['first_name'] || student['firstName']) }}
+          </option>
+        </select>
+      </label>
+
+      <div class="summary-box" *ngIf="selectedStudent">
+        <p *ngFor="let entry of entries(selectedStudent).slice(0, 6)">
+          <span>{{ entry.key }}</span>
+          <strong>{{ entry.value }}</strong>
+        </p>
+      </div>
+    </article>
+
+    <article class="form-card">
+      <h2>Save assessment</h2>
+      <p class="helper-copy">{{ feeSetupMessage }}</p>
+      <div class="field-grid">
+        <label class="field">
+          <span>School Year</span>
+          <input [(ngModel)]="assessmentForm['school_year']" name="schoolYear" type="text" placeholder="2026 - 2027" />
+        </label>
+        <label class="field">
+          <span>Semester</span>
+          <input [(ngModel)]="assessmentForm['semester']" name="semester" type="text" placeholder="First Semester" />
+        </label>
+        <label class="field">
+          <span>Tuition Fee</span>
+          <input [(ngModel)]="assessmentForm['tuition_fee']" name="tuitionFee" type="number" readonly />
+        </label>
+        <label class="field">
+          <span>Miscellaneous Fee</span>
+          <input [(ngModel)]="assessmentForm['miscellaneous_fee']" name="miscellaneousFee" type="number" readonly />
+        </label>
+        <label class="field">
+          <span>Laboratory Fee</span>
+          <input [(ngModel)]="assessmentForm['laboratory_fee']" name="laboratoryFee" type="number" readonly />
+        </label>
+        <label class="field">
+          <span>Discount Percent</span>
+          <input [(ngModel)]="assessmentForm['discount_percent']" name="discountPercent" type="number" />
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Notes</span>
+        <textarea [(ngModel)]="assessmentForm['notes']" name="assessmentNotes" rows="4" placeholder="Optional notes"></textarea>
+      </label>
+
+      <div class="button-row">
+        <button type="button" class="primary-button" (click)="createAssessment()" [disabled]="loading">Save Assessment</button>
+        <button type="button" class="secondary-button" (click)="loadAssessmentDetails()">Load Details</button>
+      </div>
+    </article>
+
+    <article class="form-card">
+      <h2>Apply scholarship</h2>
+      <div class="field-grid">
+        <label class="field">
+          <span>Scholarship Name</span>
+          <input [(ngModel)]="scholarshipForm['scholarship_name']" name="scholarshipName" type="text" placeholder="Academic Excellence" />
+        </label>
+        <label class="field">
+          <span>Fixed Amount</span>
+          <input [(ngModel)]="scholarshipForm['amount']" name="scholarshipAmount" type="number" />
+        </label>
+        <label class="field">
+          <span>Percentage</span>
+          <input [(ngModel)]="scholarshipForm['percentage']" name="scholarshipPercentage" type="number" />
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Remarks</span>
+        <textarea [(ngModel)]="scholarshipForm['remarks']" name="scholarshipRemarks" rows="4" placeholder="Scholarship remarks"></textarea>
+      </label>
+
+      <div class="button-row">
+        <button type="button" class="primary-button" (click)="applyScholarship()" [disabled]="loading">Apply Scholarship</button>
+        <button type="button" class="secondary-button" (click)="loadBreakdown()">Load Breakdown</button>
+      </div>
+    </article>
+  </div>
+
+  <p class="message success" *ngIf="message">{{ message }}</p>
+  <p class="message error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="detail-grid">
+    <article class="detail-card">
+      <div class="card-heading">
+        <h2>Assessment Details</h2>
+      </div>
+      <div *ngIf="selectedAssessment; else noAssessment">
+        <p *ngFor="let entry of entries(selectedAssessment)">
+          <span>{{ entry.key }}</span>
+          <strong>{{ entry.value }}</strong>
+        </p>
+      </div>
+      <ng-template #noAssessment>
+        <p class="empty-state">Load assessment details for the selected student.</p>
+      </ng-template>
+    </article>
+
+    <article class="detail-card">
+      <div class="card-heading">
+        <h2>Assessment Breakdown</h2>
+      </div>
+      <div *ngIf="breakdown; else noBreakdown">
+        <p *ngFor="let entry of entries(breakdown)">
+          <span>{{ entry.key }}</span>
+          <strong>{{ entry.value }}</strong>
+        </p>
+      </div>
+      <ng-template #noBreakdown>
+        <p class="empty-state">Load the breakdown route to inspect computed totals.</p>
+      </ng-template>
+    </article>
+  </div>
+
+  <article class="records-card">
+    <div class="card-heading">
+      <h2>Assessment Index</h2>
+      <span>{{ assessments.length }} records</span>
+    </div>
+
+    <div class="record-list" *ngIf="assessments.length > 0; else noAssessmentRows">
+      <article class="record-item" *ngFor="let record of assessments">
+        <p *ngFor="let entry of entries(record).slice(0, 5)">
+          <span>{{ entry.key }}</span>
+          <strong>{{ entry.value }}</strong>
+        </p>
+      </article>
+    </div>
+
+    <ng-template #noAssessmentRows>
+      <p class="empty-state">{{ loading ? 'Loading assessments...' : 'No assessment rows returned yet.' }}</p>
+    </ng-template>
+  </article>
+</section>

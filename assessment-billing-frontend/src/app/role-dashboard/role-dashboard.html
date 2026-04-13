@@ -1,0 +1,53 @@
+<section class="role-dashboard">
+  <div class="dashboard-frame">
+    <section class="dashboard-brand-panel">
+      <div class="dashboard-brand-copy">
+        <span class="role-eyebrow">{{ config().eyebrow }}</span>
+        <h1>{{ config().title }}</h1>
+        <p>{{ config().description }}</p>
+      </div>
+
+      <div class="dashboard-focus-card">
+        <div class="dashboard-focus-icon">
+          <img [src]="config().roleIconPath" [alt]="role() + ' icon'" />
+        </div>
+        <h2>{{ config().focusTitle }}</h2>
+        <p>{{ config().focusText }}</p>
+
+        <div class="dashboard-stat-row">
+          <article class="dashboard-stat" *ngFor="let stat of config().stats">
+            <span>{{ stat.label }}</span>
+            <strong>{{ stat.value }}</strong>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-main-card">
+      <div class="dashboard-status-bar">
+        <div>
+          <span class="status-label">Signed in role</span>
+          <strong>{{ authStore.role() | titlecase }}</strong>
+        </div>
+        <p>{{ config().highlight }}</p>
+      </div>
+
+      <section class="role-card-grid">
+        <article class="role-card" *ngFor="let card of config().cards">
+          <span>{{ card.label }}</span>
+          <strong>{{ card.value }}</strong>
+          <p>{{ card.detail }}</p>
+        </article>
+      </section>
+
+      <section class="role-tools">
+        <h2>Quick Access</h2>
+        <div class="role-link-grid">
+          <a class="role-link" *ngFor="let link of config().links" [routerLink]="link.path">
+            {{ link.label }}
+          </a>
+        </div>
+      </section>
+    </section>
+  </div>
+</section>

@@ -1,0 +1,169 @@
+<section class="auth-page">
+  <div class="auth-frame">
+    <article class="brand-panel">
+      <div class="brand-copy">
+        <div class="brand-mark">
+          <span class="brand-mark-icon">A</span>
+          <span class="brand-mark-text">Academic Atelier</span>
+        </div>
+        <h1>Assessment and <span>Billing.</span></h1>
+      </div>
+    </article>
+
+    <article class="auth-card">
+      <div class="mode-switch">
+        <button type="button" [class.active]="mode === 'login'" (click)="setMode('login')">Login</button>
+        <button type="button" [class.active]="mode === 'register'" (click)="setMode('register')">Register</button>
+      </div>
+
+      <div class="auth-card-body">
+        <h2>{{ mode === 'login' ? 'Welcome back' : 'Create your account' }}</h2>
+        <p class="intro-copy">
+          {{ mode === 'login' ? 'Please enter your credentials to continue.' : 'Register to continue into the enrollment portal.' }}
+        </p>
+
+        <div class="access-heading">
+          <span>Accessing as</span>
+          <small *ngIf="mode === 'login' && lockedLoginRole">Locked to {{ lockedLoginRole | titlecase }}</small>
+        </div>
+
+        <div class="role-grid">
+          <button
+            type="button"
+            class="role-card"
+            *ngFor="let role of accessRoles"
+            [class.active]="selectedRole === role.key"
+            [class.locked]="mode === 'login' && !!lockedLoginRole && lockedLoginRole !== role.key"
+            [disabled]="mode === 'login' && !!lockedLoginRole && lockedLoginRole !== role.key"
+            (click)="selectRole(role.key)"
+          >
+            <strong class="role-icon-wrap">
+              <img class="role-icon-image" [src]="role.iconPath" [alt]="role.label" />
+            </strong>
+            <em>{{ role.label }}</em>
+          </button>
+        </div>
+
+        <form class="auth-form" (ngSubmit)="submit()" *ngIf="mode === 'login'; else registerFormTemplate">
+          <label class="field">
+            <span>Email Address</span>
+            <div class="input-shell">
+              <input
+                [(ngModel)]="loginForm['email']"
+                (ngModelChange)="onLoginEmailChange($event)"
+                name="loginEmail"
+                type="email"
+                placeholder="name@gmail.com"
+              />
+            </div>
+          </label>
+
+          <label class="field">
+            <span class="field-row">
+              <span>Password</span>
+              <button type="button" class="inline-link">Forgot?</button>
+            </span>
+            <div class="input-shell">
+              <input [(ngModel)]="loginForm['password']" name="loginPassword" type="password" placeholder="Enter password" />
+            </div>
+          </label>
+
+          <label class="remember-row">
+            <input [(ngModel)]="rememberSession" name="rememberSession" type="checkbox" />
+            <span>Keep me signed in for 30 days</span>
+          </label>
+
+          <button type="submit" class="primary-button" [disabled]="loading">
+            {{ loading ? 'Connecting...' : 'Sign-In' }}
+          </button>
+        </form>
+
+        <ng-template #registerFormTemplate>
+          <form class="auth-form" (ngSubmit)="submit()">
+            <label class="field">
+              <span>Full Name</span>
+              <div class="input-shell">
+                <input [(ngModel)]="registerForm['name']" name="registerName" type="text" placeholder="Registrar User" />
+              </div>
+            </label>
+
+            <label class="field">
+              <span>Email Address</span>
+              <div class="input-shell">
+                <input [(ngModel)]="registerForm['email']" name="registerEmail" type="email" placeholder="name@gmail.com" />
+              </div>
+            </label>
+
+            <label class="field">
+              <span>Password</span>
+              <div class="input-shell">
+                <input [(ngModel)]="registerForm['password']" name="registerPassword" type="password" placeholder="Password" />
+              </div>
+            </label>
+
+            <label class="field">
+              <span>Confirm Password</span>
+              <div class="input-shell">
+                <input
+                  [(ngModel)]="registerForm['password_confirmation']"
+                  name="registerPasswordConfirmation"
+                  type="password"
+                  placeholder="Confirm password"
+                />
+              </div>
+            </label>
+
+            <button type="submit" class="primary-button" [disabled]="loading">
+              {{ loading ? 'Creating account...' : 'Create Account' }}
+            </button>
+          </form>
+        </ng-template>
+
+        <div class="message-stack" *ngIf="message || errorMessage">
+          <p class="message success" *ngIf="message">{{ message }}</p>
+          <p class="message error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </div>
+
+        <div class="divider"><span>or</span></div>
+
+        <div class="social-stack">
+          <button type="button" class="social-button" (click)="connectSocial('google')">
+            <img class="social-icon-image" src="social/google-logo.png" alt="Google" />
+            Continue with Google
+          </button>
+          <button type="button" class="social-button" (click)="connectSocial('facebook')">
+            <img class="social-icon-image" src="social/facebook-logo.png" alt="Facebook" />
+            Continue with Facebook
+          </button>
+          <button type="button" class="social-button" (click)="connectSocial('apple')">
+            <img class="social-icon-image" src="social/apple-logo.png" alt="Apple" />
+            Continue with Apple
+          </button>
+        </div>
+
+        <div class="utility-panel">
+          <label class="field compact">
+            <span>API Base URL</span>
+            <div class="input-shell">
+              <input [(ngModel)]="baseUrlInput" name="baseUrlInput" type="text" placeholder="http://127.0.0.1:8000/api" />
+            </div>
+          </label>
+
+          <div class="button-row">
+            <button type="button" class="secondary-button" (click)="saveBaseUrl()">Save API URL</button>
+            <button type="button" class="ghost-button" (click)="fetchCurrentUser()" [disabled]="loading || !authStore.token()">
+              Refresh User
+            </button>
+            <button type="button" class="ghost-button" (click)="logout()">Clear Session</button>
+          </div>
+        </div>
+
+        <p class="terms-copy">
+          By signing in, you agree to the Academic Atelier Terms of Service and Privacy Protocol.
+        </p>
+      </div>
+    </article>
+
+    <div class="auth-footer-note">End-to-end encrypted enrollment portal</div>
+  </div>
+</section>

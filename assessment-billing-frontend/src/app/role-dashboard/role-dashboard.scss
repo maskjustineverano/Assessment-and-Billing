@@ -1,0 +1,214 @@
+.role-dashboard {
+  display: grid;
+  gap: 1rem;
+}
+
+.dashboard-frame {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.4fr);
+  gap: 1rem;
+}
+
+.dashboard-brand-panel,
+.dashboard-main-card,
+.dashboard-focus-card,
+.role-card,
+.role-tools {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.dashboard-brand-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 100%;
+  padding: 1.2rem;
+  border-radius: 16px;
+}
+
+.dashboard-brand-copy {
+  max-width: 420px;
+}
+
+.role-eyebrow {
+  display: inline-flex;
+  padding: 0.32rem 0.65rem;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dashboard-brand-copy h1,
+.role-tools h2 {
+  margin: 0.85rem 0 0;
+  color: #111827;
+}
+
+.dashboard-brand-copy h1 {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+.dashboard-brand-copy p,
+.dashboard-focus-card p,
+.dashboard-status-bar p,
+.role-card p {
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.dashboard-focus-card {
+  padding: 1rem;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
+.dashboard-focus-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+}
+
+.dashboard-focus-icon img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.dashboard-focus-card h2 {
+  margin: 1rem 0 0;
+  color: var(--text);
+  font-size: 1.2rem;
+}
+
+.dashboard-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.dashboard-stat {
+  padding: 0.85rem 0.8rem;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--line-soft);
+}
+
+.dashboard-stat span,
+.status-label,
+.role-card span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.dashboard-stat strong,
+.dashboard-status-bar strong,
+.role-card strong {
+  display: block;
+  margin-top: 0.4rem;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.dashboard-main-card {
+  padding: 1.1rem;
+  border-radius: 16px;
+}
+
+.dashboard-status-bar {
+  display: grid;
+  grid-template-columns: minmax(0, auto) 1fr;
+  gap: 1rem;
+  align-items: end;
+  padding: 0.35rem 0 1rem;
+}
+
+.dashboard-status-bar p {
+  margin: 0;
+  justify-self: end;
+  text-align: right;
+}
+
+.role-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.role-card {
+  padding: 1rem;
+  border-radius: 14px;
+}
+
+.role-tools {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 14px;
+}
+
+.role-tools h2 {
+  margin-bottom: 0.95rem;
+  font-size: 1.15rem;
+}
+
+.role-link-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.role-link {
+  padding: 0.78rem 0.95rem;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid var(--line-soft);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.role-link:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+@media (max-width: 900px) {
+  .dashboard-frame,
+  .dashboard-status-bar,
+  .role-card-grid,
+  .dashboard-stat-row {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-status-bar p {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-frame {
+    gap: 0.9rem;
+  }
+
+  .dashboard-brand-copy h1 {
+    font-size: 1.8rem;
+  }
+}

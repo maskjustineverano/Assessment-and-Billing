@@ -1,0 +1,44 @@
+<section class="dashboard-page">
+  <div class="dashboard-hero">
+    <div>
+      <span class="eyebrow">Overview</span>
+      <h1>Assessment and billing dashboard</h1>
+      <p>
+        Manage students, assessments, billing, and school records from one place.
+      </p>
+    </div>
+    <div class="status-panel">
+      <span>API Status</span>
+      <strong>{{ connectionStatus }}</strong>
+    </div>
+  </div>
+
+  <section class="metric-grid" *ngIf="!loading; else loadingState">
+    <article class="metric-card" *ngFor="let metric of metrics">
+      <span>{{ metric.label }}</span>
+      <strong>{{ metric.value }}</strong>
+      <p>{{ metric.detail }}</p>
+    </article>
+  </section>
+
+  <ng-template #loadingState>
+    <section class="metric-grid">
+      <article class="metric-card loading-card" *ngFor="let item of [1, 2, 3, 4, 5, 6]">
+        <span>Loading</span>
+        <strong>...</strong>
+        <p>Fetching API data.</p>
+      </article>
+    </section>
+  </ng-template>
+
+  <section class="module-board">
+    <article class="module-group" *ngFor="let section of navigationSections">
+      <h2>{{ section.title }}</h2>
+      <div class="module-chip-grid">
+        <a class="module-chip" *ngFor="let link of section.links" [routerLink]="link.path">
+          {{ link.label }}
+        </a>
+      </div>
+    </article>
+  </section>
+</section>
